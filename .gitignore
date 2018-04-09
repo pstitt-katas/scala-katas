@@ -1,0 +1,15 @@
+# Output
+**/target
+out/
+build/
+logs/
+
+# Tooling
+.gradle/
+
+# IDE
+**/.idea
+*.iml
+*.ipr
+*.DS_Store
+*.iws
