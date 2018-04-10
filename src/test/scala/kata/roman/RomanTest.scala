@@ -20,7 +20,7 @@ class RomanTest extends PropSpec with PropertyChecks with Matchers {
       (9, "IX"),
       (5, "V"),
       (50, "L"),
-      (5000, "-"),
+      (5000, "?"),
       (4, "IV"),
       (444, "CDXLIV"),
       (6, "VI"),
@@ -56,6 +56,22 @@ object RomanNumeral {
   private val UNIT_SYMBOLS = Array("I", "X", "C", "M")
   private val FIVE_SYMBOLS = Array("V", "L", "D")
 
+  /**
+    * Gets the roman numeral value for the place represented by powerOfTen of the decimal number.
+    *
+    * It does this by getting a template based on powerOfTen=0, then if powerOfTen>0 substituting symbols.
+    *
+    * E.g. For decimal=1984, the following place strings would apply:
+    *
+    * powerOfTen=0, digit=4, placeTemplate=IV, placeString=IV
+    * powerOfTen=1, digit=8, placeTemplate=VIII, placeString=LXXX
+    * powerOfTen=2, digit=9, placeTemplate=IX, placeString=CM
+    * powerOfTen=3, digit=1, placeTemplate=I, placeString=M
+    *
+    * @param powerOfTen
+    * @param decimal
+    * @return
+    */
   private def placeString(powerOfTen: Int, decimal: Int): String = {
     var placeDigit = getPlaceDigit(powerOfTen, decimal)
     var placeTemplate = getPlaceTemplate(placeDigit)
@@ -87,12 +103,16 @@ object RomanNumeral {
   }
 
   private def getPlaceDigit(powerOfTen: Int, decimal: Int): Int = {
+    /**
+      * Could do this by converting decimal to String and then taking the digit at the appropriate position,
+      * but it's more efficient to do it this way.
+      */
     scala.math.floor(decimal / scala.math.pow(10, powerOfTen)).toInt % 10
   }
 
   private def getUnitSymbol(placeUnit: Int): String = {
     if (placeUnit >= UNIT_SYMBOLS.length) {
-      "-"
+      "?"
     }
     else {
       UNIT_SYMBOLS(placeUnit)
@@ -101,7 +121,7 @@ object RomanNumeral {
 
   private def getFiveSymbol(placeUnit: Int): String = {
     if (placeUnit >= FIVE_SYMBOLS.length) {
-      "-"
+      "?"
     }
     else {
       FIVE_SYMBOLS(placeUnit)
